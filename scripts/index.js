@@ -208,7 +208,8 @@ const fetchVideos = function(searchTerm, callback) {
     part: 'snippet',
     key: API_KEY,
     q: searchTerm,
-    maxResults: 5
+    maxResults: 5,
+
   };
   $.getJSON(BASE_URL, query, callback);
 };
@@ -229,6 +230,8 @@ const decorateResponse = function(response) {
       id: item.id.videoId,
       title: item.snippet.title,
       thumbnail: item.snippet.thumbnails.medium.url,
+      channel: item.snippet.channelId,
+      nextPage: item.nextPage
   }));
   console.log(results);
 };
@@ -237,15 +240,27 @@ const decorateResponse = function(response) {
 // 1. Create a `generateVideoItemHtml` function that receives the decorated object
 // 2. Using the object, return an HTML string containing all the expected data
 // TEST IT!
+
+/* <a href=`https://www.youtube.com/watch?v=${nextPage}`> Next Page</a> */
+
 const generateVideoItemHtml = function(video) {
   return `
   <li data-id="${video.id}">
-  ${video.id}
     <h3>${video.title}</h3>
     <a href="https://www.youtube.com/watch?v=${video.id}"><img src="${video.thumbnail}"></a>
+    <br>
+    Watch more from this channel <a href="https://www.youtube.com/channel/${video.channel}">here!</a>
+
+    <!-- The Modal -->
+      <div id="myModal" class="modal">
+
+    </div>
+
   </li>
   `;
 };
+
+
 
 // TASK:
 // 1. Create a `addVideosToStore` function that receives an array of decorated video 
